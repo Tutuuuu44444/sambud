@@ -5,9 +5,11 @@ SamBud er en prototype på en mobil applikation udviklet i React Native og Expo.
 Ideen med SamBud er, at privatpersoner i samme lokalområde kan gå sammen om at efterspørge den samme service og dermed potentielt opnå en bedre pris. Det kan eksempelvis være vinduespudsning, hækkeklipning eller græsslåning.
 
 
-## Demovideo
+## Demovideo + Github
 
 Se demovideo af SamBud på YouTube: https://youtube.com/shorts/YBwn4cFz8C8?feature=share
+
+Tilgå kode via GitHub: https://github.com/Tutuuuu44444/sambud
 
 ## Funktioner
 
