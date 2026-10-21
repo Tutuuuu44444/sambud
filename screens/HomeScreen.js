@@ -11,7 +11,8 @@ import SamBudCard from "../components/SamBudCard";
 import ButtonComponent from "../components/ButtonComponent";
 
 export default function HomeScreen({ navigation }) {
-    // FlatList bruger data fra sambudData.js og viser ét SamBudCard pr. element
+
+    // FlatList viser ét SamBudCard for hvert SamBud i datafilen
     const renderSamBud = ({ item }) => {
         return (
             <SamBudCard
@@ -20,11 +21,11 @@ export default function HomeScreen({ navigation }) {
                 participants={item.participants}
                 target={item.target}
                 price={item.price}
-                onPress={() => {
-                    if (item.id === "1") {
-                        navigation.navigate("Details");
-                    }
-                }}
+                onPress={() =>
+                    navigation.navigate("Details", {
+                        samBud: item,
+                    })
+                }
             />
         );
     };
@@ -43,7 +44,8 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.sectionTitle}>
                 Aktive SamBud nær dig
             </Text>
-            {/* Viser alle aktive SamBud fra datafilen */}
+
+            {/* Alle aktive SamBud kan åbnes fra forsiden */}
             <FlatList
                 data={SAMBUDS}
                 renderItem={renderSamBud}
@@ -53,6 +55,16 @@ export default function HomeScreen({ navigation }) {
             <ButtonComponent
                 title="+ Opret SamBud"
                 onPress={() => navigation.navigate("Create")}
+            />
+
+            <ButtonComponent
+                title="Mine SamBud"
+                onPress={() => navigation.navigate("MySamBud")}
+            />
+
+            <ButtonComponent
+                title="Søg SamBud"
+                onPress={() => navigation.navigate("Search")}
             />
 
         </View>

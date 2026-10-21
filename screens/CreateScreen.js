@@ -6,6 +6,8 @@ import {
     ScrollView,
 } from "react-native";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import styles from "../styles";
 import ButtonComponent from "../components/ButtonComponent";
 
@@ -16,10 +18,54 @@ export default function CreateScreen() {
     const [area, setArea] = useState("");
     const [participants, setParticipants] = useState("");
     const [created, setCreated] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    // Når brugeren opretter et ønske, vises en bekræftelse
-    function createSamBud() {
-        setCreated(true);
+    // Gemmer det oprettede SamBud i AsyncStorage
+    async function createSamBud() {
+
+        // Kontrollerer at alle felter er udfyldt
+        if (
+            service.trim() === "" ||
+            area.trim() === "" ||
+            participants.trim() === ""
+        ) {
+            setErrorMessage("Udfyld alle felter før du opretter et SamBud.");
+            setCreated(false);
+            return;
+        }
+
+        const newSamBud = {
+            id: Date.now().toString(),
+            service: service,
+            area: area,
+            participants: 1,
+            target: Number(participants),
+            price: null,
+            createdByUser: true,
+        };
+
+        try {
+            const storedSamBuds = await AsyncStorage.getItem("mySamBuds");
+
+            let mySamBuds = [];
+
+            if (storedSamBuds !== null) {
+                mySamBuds = JSON.parse(storedSamBuds);
+            }
+
+            mySamBuds.push(newSamBud);
+
+            await AsyncStorage.setItem(
+                "mySamBuds",
+                JSON.stringify(mySamBuds)
+            );
+
+            setErrorMessage("");
+            setCreated(true);
+
+        } catch (error) {
+            console.log("Kunne ikke gemme SamBud:", error);
+        }
     }
 
     return (
@@ -78,9 +124,17 @@ export default function CreateScreen() {
                 onPress={createSamBud}
             />
 
-            {/* Bekræftelsen vises kun efter brugeren har trykket på knappen */}
+            {/* Viser en besked hvis brugeren mangler at udfylde et felt */}
+            {errorMessage !== "" && (
+                <Text style={styles.infoText}>
+                    {errorMessage}
+                </Text>
+            )}
+
+            {/* Bekræftelsen vises efter SamBuddet er gemt */}
             {created && (
                 <View style={styles.successBox}>
+
                     <Text style={styles.successTitle}>
                         Dit SamBud-ønske er oprettet!
                     </Text>
@@ -96,6 +150,7 @@ export default function CreateScreen() {
                     <Text style={styles.successText}>
                         Gruppemål: {participants}
                     </Text>
+
                 </View>
             )}
 
